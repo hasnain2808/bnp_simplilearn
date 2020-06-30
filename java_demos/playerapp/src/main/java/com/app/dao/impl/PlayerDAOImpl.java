@@ -47,18 +47,18 @@ public class PlayerDAOImpl implements PlayerDAO {
 		Player player = null;
 		try (Connection connection = MySqlConnection.getConnection()) {
 			String sql = "select name,gender,age,teamname from player where id=?";
-			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
-			ResultSet resultSet=preparedStatement.executeQuery();
-			if(resultSet.next()) {
-				player=new Player();
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				player = new Player();
 				player.setId(id);
 				player.setAge(resultSet.getInt("age"));
 				player.setName(resultSet.getString("name"));
 				player.setGender(resultSet.getString("gender"));
 				player.setTeamName(resultSet.getString("teamname"));
-			}else {
-				throw new BusinessException("Player with id "+id+" doesnt exist");
+			} else {
+				throw new BusinessException("Player with id " + id + " doesnt exist");
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println(e);
@@ -69,19 +69,34 @@ public class PlayerDAOImpl implements PlayerDAO {
 
 	@Override
 	public void removePlayerById(int id) throws BusinessException {
-		// TODO Auto-generated method stub
+		int c = 0;
+		try (Connection connection = MySqlConnection.getConnection()) {
+			String sql = "delete from  player where id=?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			c = preparedStatement.executeUpdate();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			throw new BusinessException("Player with Id " + id + " does not exists");
+		}
 
+		catch (ClassNotFoundException | SQLException e) {
+			System.out.println(e);
+			throw new BusinessException("Internal error occured please constact sysadmin");
+		}
+		if (c == 0) {
+			throw new BusinessException("Unable to delete");
+		}
 	}
 
 	@Override
 	public List<Player> getAllPlayers() throws BusinessException {
-		List<Player> playerList=new ArrayList<>();
+		List<Player> playerList = new ArrayList<>();
 		try (Connection connection = MySqlConnection.getConnection()) {
 			String sql = "select id,name,gender,age,teamname from player";
-			PreparedStatement preparedStatement=connection.prepareStatement(sql);
-			ResultSet resultSet=preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				Player player=new Player();
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Player player = new Player();
 				player.setId(resultSet.getInt("id"));
 				player.setAge(resultSet.getInt("age"));
 				player.setName(resultSet.getString("name"));
@@ -89,7 +104,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 				player.setTeamName(resultSet.getString("teamname"));
 				playerList.add(player);
 			}
-			if(playerList.size()==0) {
+			if (playerList.size() == 0) {
 				throw new BusinessException("No Players as of now in DB");
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -101,32 +116,95 @@ public class PlayerDAOImpl implements PlayerDAO {
 
 	@Override
 	public List<Player> getPlayersByName(String name) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Player> playerList = new ArrayList<>();
+		try (Connection connection = MySqlConnection.getConnection()) {
+			String sql = "select id,name,age,gender, teamname from player where name=?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Player player = new Player();
+				player.setId(resultSet.getInt("id"));
+				player.setAge(resultSet.getInt("age"));
+				player.setName(resultSet.getString("name"));
+				player.setGender(resultSet.getString("gender"));
+				player.setTeamName(resultSet.getString("teamname"));
+				playerList.add(player);
+			}
+			if (playerList.size() == 0) {
+				throw new BusinessException("No Players as of now in DB with name " + name);
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println(e);
+			throw new BusinessException("Internal error occured please contact sysadmin");
+		}
+		return playerList;		
 	}
 
 	@Override
 	public List<Player> getPlayersByTeamName(String teamname) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Player> playerList = new ArrayList<>();
+		try (Connection connection = MySqlConnection.getConnection()) {
+			String sql = "select id,name,age,gender, teamname from player where teamname=?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, teamname);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Player player = new Player();
+				player.setId(resultSet.getInt("id"));
+				player.setAge(resultSet.getInt("age"));
+				player.setName(resultSet.getString("name"));
+				player.setGender(resultSet.getString("gender"));
+				player.setTeamName(resultSet.getString("teamname"));
+				playerList.add(player);
+			}
+			if (playerList.size() == 0) {
+				throw new BusinessException("No Players as of now in DB with teamname " + teamname);
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println(e);
+			throw new BusinessException("Internal error occured please contact sysadmin");
+		}
+		return playerList;
 	}
 
 	@Override
 	public List<Player> getPlayersByAge(int age) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Player> playerList = new ArrayList<>();
+		try (Connection connection = MySqlConnection.getConnection()) {
+			String sql = "select id,name,age,gender, teamname from player where age=?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, age);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Player player = new Player();
+				player.setId(resultSet.getInt("id"));
+				player.setAge(resultSet.getInt("age"));
+				player.setName(resultSet.getString("name"));
+				player.setGender(resultSet.getString("gender"));
+				player.setTeamName(resultSet.getString("teamname"));
+				playerList.add(player);
+			}
+			if (playerList.size() == 0) {
+				throw new BusinessException("No Players as of now in DB with age " + age);
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println(e);
+			throw new BusinessException("Internal error occured please contact sysadmin");
+		}
+		return playerList;
 	}
 
 	@Override
 	public List<Player> getPlayersByGender(String gender) throws BusinessException {
-		List<Player> playerList=new ArrayList<>();
+		List<Player> playerList = new ArrayList<>();
 		try (Connection connection = MySqlConnection.getConnection()) {
 			String sql = "select id,name,age,teamname from player where gender=upper(?)";
-			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, gender);
-			ResultSet resultSet=preparedStatement.executeQuery();
-			while(resultSet.next()) {
-				Player player=new Player();
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Player player = new Player();
 				player.setId(resultSet.getInt("id"));
 				player.setAge(resultSet.getInt("age"));
 				player.setName(resultSet.getString("name"));
@@ -134,8 +212,36 @@ public class PlayerDAOImpl implements PlayerDAO {
 				player.setTeamName(resultSet.getString("teamname"));
 				playerList.add(player);
 			}
-			if(playerList.size()==0) {
-				throw new BusinessException("No Players as of now in DB with gender "+gender);
+			if (playerList.size() == 0) {
+				throw new BusinessException("No Players as of now in DB with gender " + gender);
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			System.out.println(e);
+			throw new BusinessException("Internal error occured please contact sysadmin");
+		}
+		return playerList;
+	}
+
+	@Override
+	public List<Player> getPlayersByAgeRange(int upper, int lower) throws BusinessException {
+		List<Player> playerList = new ArrayList<>();
+		try (Connection connection = MySqlConnection.getConnection()) {
+			String sql = "select id,name,age,gender, teamname from player where age<=? and age>=?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, upper);
+			preparedStatement.setInt(2, lower);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Player player = new Player();
+				player.setId(resultSet.getInt("id"));
+				player.setAge(resultSet.getInt("age"));
+				player.setName(resultSet.getString("name"));
+				player.setGender(resultSet.getString("gender"));
+				player.setTeamName(resultSet.getString("teamname"));
+				playerList.add(player);
+			}
+			if (playerList.size() == 0) {
+				throw new BusinessException("No Players as of now in DB with age between " + upper + " and " + lower);
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			System.out.println(e);

@@ -58,6 +58,14 @@ public class PlayerBoImpl implements PlayerBO {
 		return b;
 	}
 
+	private boolean isValidTeamName(String teamname) {
+		boolean b = false;
+		if (teamname.matches("[a-zA-Z]{3,30}")) {
+			b = true;
+		}
+		return b;
+	}
+
 	@Override
 	public Player getPlayerById(int id) throws BusinessException {
 		Player player = null;
@@ -75,9 +83,13 @@ public class PlayerBoImpl implements PlayerBO {
 	}
 
 	@Override
-	public void removePlayerById(int id) {
-		// TODO Auto-generated method stub
-
+	public void removePlayerById(int id) throws BusinessException {
+		Player player = null;
+		if (isValidId(id)) {
+			playerDAO.removePlayerById(id);
+		} else {
+			throw new BusinessException("Entered Id " + id + " is invalid");
+		}
 	}
 
 	@Override
@@ -89,29 +101,44 @@ public class PlayerBoImpl implements PlayerBO {
 
 	@Override
 	public List<Player> getPlayersByName(String name) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Player> playerList = null;
+		if (isValidName(name)) {
+			playerList = playerDAO.getPlayersByName(name);
+		} else {
+			throw new BusinessException("Entered name " + name + "is invalid");
+		}
+		return playerList;
 	}
 
 	@Override
 	public List<Player> getPlayersByTeamName(String teamname) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Player> playerList = null;
+		if (isValidTeamName(teamname)) {
+			playerList = playerDAO.getPlayersByTeamName(teamname);
+		} else {
+			throw new BusinessException("Entered teamname " + teamname + "is invalid");
+		}
+		return playerList;
 	}
 
 	@Override
 	public List<Player> getPlayersByAge(int age) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Player> playerList = null;
+		if (isValidAge(age)) {
+			playerList = playerDAO.getPlayersByAge(age);
+		} else {
+			throw new BusinessException("Entered age " + age + "is invalid");
+		}
+		return playerList;
 	}
 
 	@Override
 	public List<Player> getPlayersByGender(String gender) throws BusinessException {
 		List<Player> playerList = null;
-		if(isValidGender(gender)) {
-			playerList=playerDAO.getPlayersByGender(gender);
-		}else {
-			throw new BusinessException("Entered gender "+gender+"is invalid");
+		if (isValidGender(gender)) {
+			playerList = playerDAO.getPlayersByGender(gender);
+		} else {
+			throw new BusinessException("Entered gender " + gender + "is invalid");
 		}
 		return playerList;
 	}
@@ -123,5 +150,16 @@ public class PlayerBoImpl implements PlayerBO {
 			b = true;
 		}
 		return b;
+	}
+
+	@Override
+	public List<Player> getPlayersByAgeRange(int upper, int lower) throws BusinessException {
+		List<Player> playerList = null;
+		if (isValidAge(lower) && isValidAge(upper)) {
+			playerList = playerDAO.getPlayersByAgeRange(upper, lower);
+		} else {
+			throw new BusinessException("Entered age " + upper + " and " + lower + " is invalid");
+		}
+		return playerList;
 	}
 }

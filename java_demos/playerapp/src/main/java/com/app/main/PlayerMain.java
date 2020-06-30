@@ -23,7 +23,11 @@ public class PlayerMain {
 			System.out.println("3)Search Player By id");
 			System.out.println("4)Get All Players");
 			System.out.println("5)Search Players By Gender");
-			System.out.println("6)EXIT");
+			System.out.println("6)Search Players By Age");
+			System.out.println("7)Search Players By Age Range");
+			System.out.println("8)Search Players By Name");
+			System.out.println("9)Search Players By TeamName");
+			System.out.println("10)EXIT");
 			System.out.println("Enter your choice");
 			ch = Integer.parseInt(scanner.nextLine());
 
@@ -54,8 +58,13 @@ public class PlayerMain {
 
 				break;
 			case 2:
-				System.out.println("Under construction please try other option");
-
+				System.out.println("Enter id to delete");
+				int id8 = Integer.parseInt(scanner.nextLine());
+				try {
+					playerBO.removePlayerById(id8);
+				} catch (BusinessException e) {
+					System.out.println(e.getMessage());
+				}
 				break;
 			case 3:
 				System.out.println("Enter player id for player details");
@@ -87,11 +96,28 @@ public class PlayerMain {
 
 			case 5:
 				System.out.println("Enter gender(m/f/o) to get the players list");
-				String gender1=scanner.nextLine();
+				String gender1 = scanner.nextLine();
 				try {
 					List<Player> playerList = playerBO.getPlayersByGender(gender1);
 					if (playerList != null && playerList.size() > 0) {
-						System.out.println("Total there are " + playerList.size() + " no of players..with gender "+gender1+" Details are");
+						System.out.println("Total there are " + playerList.size() + " no of players..with gender "
+								+ gender1 + " Details are");
+						for (Player p1 : playerList) {
+							System.out.println(p1);
+						}
+					}
+				} catch (BusinessException e) {
+					System.out.println(e.getMessage());
+				}
+				break;
+			case 6:
+				System.out.println("Enter age to get the players list");
+				int age1 = Integer.parseInt(scanner.nextLine());
+				try {
+					List<Player> playerList = playerBO.getPlayersByAge(age1);
+					if (playerList != null && playerList.size() > 0) {
+						System.out.println("Total there are " + playerList.size() + " no of players..with age " + age1
+								+ " Details are");
 						for (Player p1 : playerList) {
 							System.out.println(p1);
 						}
@@ -101,7 +127,58 @@ public class PlayerMain {
 				}
 				break;
 
-			case 6:
+			case 7:
+				System.out.println("Enter upper and lower age to get the players list");
+				int upper = Integer.parseInt(scanner.nextLine());
+				int lower = Integer.parseInt(scanner.nextLine());
+				try {
+					List<Player> playerList = playerBO.getPlayersByAgeRange(upper, lower);
+					if (playerList != null && playerList.size() > 0) {
+						System.out.println("Total there are " + playerList.size()
+								+ " no of players..with the req range Details are");
+						for (Player p1 : playerList) {
+							System.out.println(p1);
+						}
+					}
+				} catch (BusinessException e) {
+					System.out.println(e.getMessage());
+				}
+				break;
+
+			case 9:
+				System.out.println("Enter team name");
+				String teamname1 = scanner.nextLine();
+				try {
+					List<Player> playerList = playerBO.getPlayersByTeamName(teamname1);
+					if (playerList != null && playerList.size() > 0) {
+						System.out.println("Total there are " + playerList.size()
+								+ " no of players..with the req range Details are");
+						for (Player p1 : playerList) {
+							System.out.println(p1);
+						}
+					}
+				} catch (BusinessException e) {
+					System.out.println(e.getMessage());
+				}
+				break;
+			case 8:
+				System.out.println("Enter player name");
+				String name1 = scanner.nextLine();
+				try {
+					List<Player> playerList = playerBO.getPlayersByName(name1);
+					if (playerList != null && playerList.size() > 0) {
+						System.out.println("Total there are " + playerList.size()
+								+ " no of players..with the req range Details are");
+						for (Player p1 : playerList) {
+							System.out.println(p1);
+						}
+					}
+				} catch (BusinessException e) {
+					System.out.println(e.getMessage());
+				}
+				break;
+
+			case 10:
 				System.out.println("Thank you for using our app");
 
 				break;
@@ -110,7 +187,7 @@ public class PlayerMain {
 				System.out.println("Invalid option Try again");
 				break;
 			}
-		} while (ch != 6);
+		} while (ch != 9);
 	}
 
 }
